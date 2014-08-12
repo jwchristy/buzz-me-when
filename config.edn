@@ -1,0 +1,6 @@
+{ :mail-return-address "me@acme.com"
+  :mail-login "me"
+  :mail-password "flimflam"
+  :mail-host "smtp.acme.com"
+  :text-domain "@vtext.com"
+  :text-number "3035551234" }
