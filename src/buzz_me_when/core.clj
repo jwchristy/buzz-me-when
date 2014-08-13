@@ -2,8 +2,7 @@
                                 [ring.middleware.params :refer [wrap-params]]
                                 [ring.adapter.jetty :refer [run-jetty]]
                                 [compojure.core :refer [defroutes ANY]]
-                                [buzz-me-when.accessor :as accessor]
-                                [buzz-me-when.monitor :as monitor]))
+                                [buzz-me-when.accessor :as accessor]))
 
 (defresource alert-retriever-marker [symbol]
   :allowed-methods [:get :put]
@@ -29,4 +28,4 @@
   (-> alerts
     (wrap-params)))
 
-(run-jetty #'handler {:port 3000})
+;(run-jetty #'handler {:port 3000})
