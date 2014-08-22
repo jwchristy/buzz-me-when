@@ -3,7 +3,8 @@
             [clojure-csv.core :as csv]
             [buzz-me-when.accessor :as accessor]
             [postal.core :as postal]
-            [clojure.edn :as edn]))
+            [clojure.edn :as edn]
+            [clj-time.core :as time]))
 
 (def config (edn/read-string (slurp "config.edn")))
 
@@ -40,7 +41,7 @@
                      {:from return-address
                       :to (str text-number text-domain)
                       :body body})]
-    (prn (str "SB:" result-map))
+    ;(prn (str "SB:" result-map))
     (if (= 0 (:code result-map))
       symbol
       nil)))
@@ -50,19 +51,26 @@
   []
   (while true
     (do
-      (Thread/sleep 300000)       ; 5 minutes
-      (if-let [alerts (accessor/get-all-alerts)]
-        ; Find all non-fulfilled alerts, sending a text for and marking as
-        ; fulfilled those whose current price breaches the alert-price
-        (doall (->> alerts
-                 (filter (fn [alert] (not (:fulfilled_date alert))))
-                 (filter (fn [alert] (threshold-breached? alert)))
-                 (map (fn [alert] (send-buzz text-destination
-                                    (str "Alert - price threshold breached for " (:symbol alert))
-                                    mail-password (:symbol alert))))
-                 (filter identity)
-                 (map (fn [result-symbol] (accessor/mark-fulfilled result-symbol))))))))
+      (prn "Running monitor loop")
+      (Thread/sleep 600000)       ; 10 minutes
+      (let [hour (time/hour (time/now))
+            day (time/day-of-week (time/now))]
+        (if (and (and (> hour 12) (< hour 21))
+              (and (> day 0) (< day 6)))
+          (if-let [alerts (accessor/get-all-alerts)]
+            ; Find all non-fulfilled alerts, sending a text for and marking as
+            ; fulfilled those whose current price breaches the alert-price
+            (doall (->> alerts
+                     (filter (fn [alert] (not (:fulfilled_date alert))))
+                     (filter (fn [alert] (threshold-breached? alert)))
+                     (map (fn [alert] (send-buzz text-destination
+                                        (str "Alert - price threshold breached for " (:symbol alert))
+                                        mail-password (:symbol alert))))
+                     (filter identity)
+                     (map (fn [result-symbol] (accessor/mark-fulfilled result-symbol))))))))))
   nil)
-
-; Kick off the monitor
-(.start (Thread. monitor-alerts-indefinitely))
+ 
+(defn start-monitor
+  "Kick off the monitor"
+  []
+  (.start (Thread. monitor-alerts-indefinitely)))

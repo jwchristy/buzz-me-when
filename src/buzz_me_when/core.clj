@@ -2,7 +2,8 @@
                                 [ring.middleware.params :refer [wrap-params]]
                                 [ring.adapter.jetty :refer [run-jetty]]
                                 [compojure.core :refer [defroutes ANY]]
-                                [buzz-me-when.accessor :as accessor]))
+                                [buzz-me-when.accessor :as accessor]
+                                [buzz-me-when.monitor :as monitor]))
 
 (defresource alert-retriever-marker [symbol]
   :allowed-methods [:get :put]
@@ -20,12 +21,19 @@
   ; TODO: Validate user-provided data before putting alert to store
   :post! (fn [ctx] (accessor/put-alert-doc (slurp (get-in ctx [:request :body])))))
 
+(defresource alert-monitor-starter []
+  :allowed-methods [:post]
+  :available-media-types ["application/json"]
+  :post! (fn [ctx] (monitor/start-monitor)))
+
 (defroutes alerts
   (ANY "/alert/:symbol" [symbol] (alert-retriever-marker symbol))
-  (ANY "/alert" [] (alert-poster-lister)))
+  (ANY "/alert" [] (alert-poster-lister))
+  (ANY "/monitor" [] (alert-monitor-starter)))
 
 (def handler
   (-> alerts
     (wrap-params)))
 
 ;(run-jetty #'handler {:port 3000})
+
