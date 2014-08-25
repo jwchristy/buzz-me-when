@@ -4,9 +4,10 @@
             [buzz-me-when.accessor :as accessor]
             [postal.core :as postal]
             [clojure.edn :as edn]
+            [clojure.java.io :as io]
             [clj-time.core :as time]))
 
-(def config (edn/read-string (slurp "config.edn")))
+(def config (edn/read-string (slurp (io/resource "config.edn"))))
 
 (def finance-url-prefix "http://finance.yahoo.com/d/quotes.csv?s=")
 (def finance-url-suffix "&f=sl1op&e=.csv")
@@ -52,7 +53,7 @@
   (while true
     (do
       (prn "Running monitor loop")
-      (Thread/sleep 600000)       ; 10 minutes
+      (Thread/sleep 60000)       ; 1 minutes
       (let [hour (time/hour (time/now))
             day (time/day-of-week (time/now))]
         (if (and (and (> hour 12) (< hour 21))
