@@ -29,7 +29,7 @@
 (defroutes alerts
   (ANY "/alert/:symbol" [symbol] (alert-retriever-marker symbol))
   (ANY "/alert" [] (alert-poster-lister))
-  (ANY "/monitor" [] (alert-monitor-starter)))
+  (ANY "/alert-monitor" [] (alert-monitor-starter)))
 
 (def handler
   (-> alerts

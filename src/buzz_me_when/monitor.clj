@@ -52,8 +52,8 @@
   []
   (while true
     (do
-      (prn "Running monitor loop")
-      (Thread/sleep 60000)       ; 1 minutes
+      ;(prn "Running monitor loop")
+      (Thread/sleep 600000)       ; 10 minutes
       (let [hour (time/hour (time/now))
             day (time/day-of-week (time/now))]
         (if (and (and (> hour 12) (< hour 21))
