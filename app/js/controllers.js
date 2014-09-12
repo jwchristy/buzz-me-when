@@ -2,10 +2,24 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
+angular.module('buzzMeWhenApp.controllers', [])
+  .controller('alertsController', function($scope, alertAPIService) {
+        $scope.symbolFilter = null;
+        $scope.alertList = [];
 
-  }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
-
-  }]);
+        alertAPIService.getAlerts().success(function (response) {
+            $scope.alertList = response;
+        });        
+//        $scope.alertList = [
+//            {
+//                symbol: "IBM",
+//                price: 322,
+//                direction: "L"
+//            },
+//            {
+//                symbol: "CSCO",
+//                price: 15.5,
+//                direction: "S"
+//            }
+//        ];
+  });
