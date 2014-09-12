@@ -13,12 +13,8 @@ angular.module('buzzMeWhenApp.services', []).
         alertAPI.getAlerts = function() {
             return $http({
                 method: 'GET',
-                url: 'http://svc.swtradewindsllc.com/buzz/alert',
-                headers:{
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
-                }})
+//                url: 'http://svc.swtradewindsllc.com/buzz/alert',
+                url: 'http://localhost:3000/alert'})
                 .success(function(d){ console.log( "yay" ); })
                 .error(function(d){ console.log( "nope" ); });
             }

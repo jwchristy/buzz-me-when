@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [ring "1.2.2"]
                  [compojure "1.1.3"]
-                 [liberator "0.10.0"]
+                 [liberator "0.11.1"]
                  [clj-http "0.9.1"]
                  [cheshire "5.3.1"]
                  [clojure-csv/clojure-csv "2.0.1"]
