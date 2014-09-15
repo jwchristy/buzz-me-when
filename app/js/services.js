@@ -13,7 +13,6 @@ angular.module('buzzMeWhenApp.services', []).
         alertAPI.getAlerts = function() {
             return $http({
                 method: 'GET',
-//                url: 'http://svc.swtradewindsllc.com/buzz/alert',
                 url: 'http://localhost:3000/alert'})
                 .success(function(d){ console.log( "yay" ); })
                 .error(function(d){ console.log( "nope" ); });
