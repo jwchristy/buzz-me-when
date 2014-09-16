@@ -3,6 +3,7 @@
                                 [ring.middleware.params :refer [wrap-params]]
                                 [ring.adapter.jetty :refer [run-jetty]]
                                 [compojure.core :refer [defroutes ANY]]
+                                [ring.middleware.cors :refer [wrap-cors]]
                                 [buzz-me-when.accessor :as accessor]
                                 [buzz-me-when.monitor :as monitor]))
 
@@ -13,16 +14,7 @@
   :exists? (fn [ctx] (if-let [alert (accessor/get-alert symbol)] {::alert alert}))
   :handle-ok ::alert
   ; TODO: Validate user-provided data before putting alert to store
-  :put! (fn [ctx] (accessor/mark-fulfilled symbol))
-  :handle-options (fn [_] (do (prn "HERE HERE HERE")
-                            (ring-response {:status 200 :body "{}"  :headers {"Access-Control-Allow-Origin" "*"}}))))
-;                                            "Access-Control-Allow-Methods" "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-;                                            "Access-Control-Allow-Headers" "X-Requested-With,content-type"
-;                                            "Access-Control-Allow-Credentials" true}})))
-;  :as-response (fn [d ctx] (do (prn "Blah")
-;                 (-> (as-response d ctx) ;; default implementation
-;                   (assoc-in [:headers "Access-Control-Allow-Origin"] "*")
-;                   ))))
+  :put! (fn [ctx] (accessor/mark-fulfilled symbol)))
 
 (defresource alert-poster-lister []
   :allowed-methods [:get :post :options]
@@ -43,7 +35,9 @@
 
 (def handler
   (-> alerts
-    (wrap-params)))
+    (wrap-params)
+    (wrap-cors :access-control-allow-origin #"http://localhost:8000"
+      :access-control-allow-methods [:get :post])))
 
-(run-jetty #'handler {:port 3000})
+;(run-jetty #'handler {:port 3000})
 

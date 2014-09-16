@@ -10,6 +10,7 @@
                  [cheshire "5.3.1"]
                  [clojure-csv/clojure-csv "2.0.1"]
                  [com.draines/postal "1.11.1"]
-                 [clj-time "0.7.0"]]
+                 [clj-time "0.7.0"]
+                 [ring-cors "0.1.4"]]
   :plugins [[lein-ring "0.8.10"]]
   :ring {:handler buzz-me-when.core/handler})
