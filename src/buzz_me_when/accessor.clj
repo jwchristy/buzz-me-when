@@ -42,3 +42,9 @@
   (let [alert (get-alert symbol)]
     (put-alert (assoc alert :fulfilled_date (str (time/now))))))
 
+(defn remove-alert
+  "Remove an alert from the system"
+  [symbol]
+  (let [existing-alerts (deref alerts)]
+    (compare-and-set! alerts existing-alerts (dissoc existing-alerts symbol))))
+
